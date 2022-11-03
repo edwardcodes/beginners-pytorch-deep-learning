@@ -20,7 +20,7 @@ def train(model, optimizer, loss_fn, train_loader, val_loader, epochs=20, device
             optimizer.step()
             training_loss += loss.data.item() * inputs.size(0)
         training_loss /= len(train_loader.dataset)
-        
+
         model.eval()
         num_correct = 0 
         num_examples = 0
@@ -45,11 +45,9 @@ def find_lr(model, loss_fn, optimizer, train_loader, init_value=1e-8, final_valu
     lr = init_value
     optimizer.param_groups[0]["lr"] = lr
     best_loss = 0.0
-    batch_num = 0
     losses = []
     log_lrs = []
-    for data in train_loader:
-        batch_num += 1
+    for batch_num, data in enumerate(train_loader, start=1):
         inputs, targets = data
         inputs = inputs.to(device)
         targets = targets.to(device)
@@ -57,10 +55,8 @@ def find_lr(model, loss_fn, optimizer, train_loader, init_value=1e-8, final_valu
         outputs = model(inputs)
         loss = loss_fn(outputs, targets)
 
-        # Crash out if loss explodes
-
         if batch_num > 1 and loss > 4 * best_loss:
-            if(len(log_lrs) > 20):
+            if (len(log_lrs) > 20):
                 return log_lrs[10:-5], losses[10:-5]
             else:
                 return log_lrs, losses
