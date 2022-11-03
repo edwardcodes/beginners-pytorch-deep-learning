@@ -16,12 +16,10 @@ class BadRandom(object):
         img_np = np.array(img)
         random = np.random.random_sample(img_np.shape)
         out_np = img_np + random
-        out = Image.fromarray(out_np.astype('uint8'), 'RGB')
-        return out
+        return Image.fromarray(out_np.astype('uint8'), 'RGB')
 
     def __repr__(self):
-        str = f"{self.__class__.__name__  }"
-        return str
+        return f"{self.__class__.__name__}"
 
 train_data_path = "." # Add correct path here!
 model.to(device)
